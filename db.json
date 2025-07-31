@@ -1,104 +1,24 @@
 {
   "users": [
-    {
-      "id": 1,
-      "name": "Leanne Graham",
-      "email": "Sincere@april.biz",
-      "phone": "1-770-736-8031 x56442",
-      "website": "hildegard.org",
-      "company": {
-        "name": "Romaguera-Crona"
-      }
-    },
-    {
-      "id": 2,
-      "name": "Ervin Howell",
-      "email": "Shanna@melissa.tv",
-      "phone": "010-692-6593 x09125",
-      "website": "anastasia.net",
-      "company": {
-        "name": "Deckow-Crist"
-      }
-    },
-    {
-      "id": 3,
-      "name": "Clementine Bauch",
-      "email": "Nathan@yesenia.net",
-      "phone": "1-463-123-4447",
-      "website": "ramiro.info",
-      "company": {
-        "name": "Romaguera-Jacobson"
-      }
-    },
-    {
-      "id": 4,
-      "name": "Patricia Lebsack",
-      "email": "Julianne.OConner@kory.org",
-      "phone": "493-170-9623 x156",
-      "website": "kale.biz",
-      "company": {
-        "name": "Robel-Corkery"
-      }
-    },
-    {
-      "id": 5,
-      "name": "Chelsey Dietrich",
-      "email": "Lucio_Hettinger@annie.ca",
-      "phone": "(254)954-1289",
-      "website": "demarco.info",
-      "company": {
-        "name": "Keebler LLC"
-      }
-    },
-    {
-      "id": 6,
-      "name": "Mrs. Dennis Schulist",
-      "email": "Karley_Dach@jasper.info",
-      "phone": "1-477-935-8478 x6430",
-      "website": "ola.org",
-      "company": {
-        "name": "Considine-Lockman"
-      }
-    },
-    {
-      "id": 7,
-      "name": "Kurtis Weissnat",
-      "email": "Telly.Hoeger@billy.biz",
-      "phone": "210.067.6132",
-      "website": "elvis.io",
-      "company": {
-        "name": "Johns Group"
-      }
-    },
-    {
-      "id": 8,
-      "name": "Nicholas Runolfsdottir V",
-      "email": "Sherwood@rosamond.me",
-      "phone": "586.493.6943 x140",
-      "website": "jacynthe.com",
-      "company": {
-        "name": "Abernathy Group"
-      }
-    },
-    {
-      "id": 9,
-      "name": "Glenna Reichert",
-      "email": "Chaim_McDermott@dana.io",
-      "phone": "(775)976-6794 x41206",
-      "website": "conrad.com",
-      "company": {
-        "name": "Yost and Sons"
-      }
-    },
-    {
-      "id": 10,
-      "name": "Clementina DuBuque",
-      "email": "Rey.Padberg@karina.biz",
-      "phone": "024-648-3804",
-      "website": "ambrose.net",
-      "company": {
-        "name": "Hoeger LLC"
-      }
-    }
+    { "id": 1, "name": "Иванов Иван", "email": "ivanov.ivan@example.ru", "phone": "+7-495-123-4567", "company": { "name": "ООО Ромашка" } },
+    { "id": 2, "name": "Петров Пётр", "email": "petrov.petr@example.ru", "phone": "+7-812-234-5678", "company": { "name": "ЗАО Лес" } },
+    { "id": 3, "name": "Сидорова Анна", "email": "sidorova.anna@example.ru", "phone": "+7-44-321-6543", "company": { "name": "ООО Соняшник" } },
+    { "id": 4, "name": "Кузнецов Алексей", "email": "kuznetsov.alexey@example.by", "phone": "+7-17-555-1234", "company": { "name": "ООО Берёза" } },
+    { "id": 5, "name": "Новикова Мария", "email": "novikova.maria@example.ru", "phone": "+7-495-987-6543", "company": { "name": "ООО Лето" } },
+    { "id": 6, "name": "Васильев Дмитрий", "email": "vasiliev.dmitry@example.ru", "phone": "+7-812-654-3210", "company": { "name": "ЗАО Север" } },
+    { "id": 7, "name": "Мельник Анна", "email": "melnik.olga@example.ru", "phone": "+7-44-555-7777", "company": { "name": "ООО Поле" } },
+    { "id": 8, "name": "Ковалёв Сергей", "email": "kovalev.sergey@example.by", "phone": "+375-17-222-3333", "company": { "name": "ООО Лесник" } },
+    { "id": 9, "name": "Попова Елена", "email": "popova.elena@example.ru", "phone": "+7-495-333-2222", "company": { "name": "ООО Весна" } },
+    { "id": 10, "name": "Григорьев Артём", "email": "grigoriev.artem@example.ru", "phone": "+7-812-111-4444", "company": { "name": "ЗАО Юг" } },
+    { "id": 11, "name": "Зайцева Виктория", "email": "zaitseva.viktoria@example.ru", "phone": "+7-812-234-99", "company": { "name": "ООО Полюс" } },
+    { "id": 12, "name": "Морозов Павел", "email": "morozov.pavel@example.by", "phone": "+7-812-234-5678", "company": { "name": "ООО Снег" } },
+    { "id": 13, "name": "Семенова Дарья", "email": "semenova.daria@example.ru", "phone": "+7-495-777-8888", "company": { "name": "ООО Луна" } },
+    { "id": 14, "name": "Тарасов Игорь", "email": "tarasov.igor@example.ru", "phone": "+7-812-999-0000", "company": { "name": "ЗАО Ветер" } },
+    { "id": 15, "name": "Орлова Светлана", "email": "orlova.svetlana@example.ru", "phone": "+7-812-234-5678", "company": { "name": "ООО Полюс" } },
+    { "id": 16, "name": "Богданов Николай", "email": "bogdanov.nikolay@example.by", "phone": "+7-812-234-5678", "company": { "name": "ООО Озеро" } },
+    { "id": 17, "name": "Волкова Анна", "email": "volkova.alina@example.ru", "phone": "+7-495-444-5555", "company": { "name": "ООО Звезда" } },
+    { "id": 18, "name": "Данилов Аркадий", "email": "danilov.arkadiy@example.ru", "phone": "+7-812-333-4444", "company": { "name": "ЗАО Город" } },
+    { "id": 19, "name": "Егорова Ксения", "email": "egorova.kseniya@example.ru", "phone": "+7-812-234-5678", "company": { "name": "ООО Полюс" } },
+    { "id": 20, "name": "Жуков Андрей", "email": "zhukov.andrey@example.by", "phone": "+7-812-234-5678", "company": { "name": "ООО Полюс" } }
   ]
 } 

@@ -1,9 +1,23 @@
 <script setup lang="ts">
 import type { User } from '~/types/userTypes'
 
-defineProps<{ user: User }>()
-const emit = defineEmits(['view', 'edit'])
+const props = defineProps<{ user: User }>()
+const emit = defineEmits(['delete', 'edit'])
 
+const showDeleteDialog = ref(false)
+
+const handleDelete = () => {
+  showDeleteDialog.value = true
+}
+
+const confirmDelete = () => {
+  emit('delete', props.user.id)
+  showDeleteDialog.value = false
+}
+
+const cancelDelete = () => {
+  showDeleteDialog.value = false
+}
 </script>
 <template>
     <v-card class="h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1" elevation="2">
@@ -32,12 +46,33 @@ const emit = defineEmits(['view', 'edit'])
         </v-card-text>
 
         <v-card-actions class="pa-4 pt-0">
-            <v-btn variant="outlined" color="primary" size="small" class="flex-1" @click="emit('view', user.id)">
-                {{ 'Посмотреть' }}
+            <v-btn variant="tonal" color="red-darken-3" size="small" class="flex-1" @click="handleDelete">
+                {{ 'Удалить' }}
             </v-btn>
-            <v-btn variant="outlined" color="secondary" size="small" class="flex-1 ml-2" @click="emit('edit', user.id)">
+            <v-btn variant="outlined" color="green-accent-4" size="small" class="flex-1 ml-2" @click="emit('edit', user.id)">
                 {{ 'Редактировать' }}
             </v-btn>
         </v-card-actions>
     </v-card>
+
+    <!-- Подтверждение удаления -->
+    <v-dialog v-model="showDeleteDialog" max-width="400">
+        <v-card>
+            <v-card-title class="text-h6">
+                Подтверждение удаления
+            </v-card-title>
+            <v-card-text>
+                Вы уверены, что хотите удалить пациента "{{ user.name }}" из базы?
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn variant="text" @click="cancelDelete">
+                    Отмена
+                </v-btn>
+                <v-btn variant="tonal" color="red-darken-3" @click="confirmDelete">
+                    Удалить
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>

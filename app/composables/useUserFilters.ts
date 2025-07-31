@@ -23,7 +23,7 @@ export const useUserFilters = (users: Ref<User[] | undefined>, page: Ref<number>
       return nameMatch && phoneMatch && letterMatch
     })
 
-    filteredTotal.value = filteredUsers.length
+    setFilteredUsersCount(filteredUsers.length)
 
     const start = (page.value - 1) * limit.value
     const end = start + limit.value
@@ -45,6 +45,12 @@ export const useUserFilters = (users: Ref<User[] | undefined>, page: Ref<number>
     return Array.from(letters).sort()
   })
 
+  const setFilteredUsersCount = (count: number) => {
+    filteredTotal.value = count
+  }
+
+  const getFilteredUsersCount = computed(() => filteredTotal.value)
+
   const clearFilters = () => {
     nameFilter.value = ''
     phoneFilter.value = ''
@@ -57,7 +63,7 @@ export const useUserFilters = (users: Ref<User[] | undefined>, page: Ref<number>
     letterFilter,
     filteredUsers,
     availableLetters,
-    filteredTotal,
-    clearFilters
+    getFilteredUsersCount,
+    clearFilters,
   }
 } 

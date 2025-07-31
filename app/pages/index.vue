@@ -4,11 +4,11 @@ import UserCard from '~/components/userCard.vue'
 import { useUserFilters } from '~/composables/useUserFilters'
 
 const usersStore = useUsersStore()
-const { users, isLoading, error, page, pageCount } = storeToRefs(usersStore)
-const { setPage, setLimit, limit, limitOptions } = usersStore
+const { users, isLoading, error, page, limit, pageCount } = storeToRefs(usersStore)
+const { setPage, setLimit, limitOptions } = usersStore
 
 // Use the filtering composable
-const { nameFilter, phoneFilter, filteredUsers, clearFilters } = useUserFilters(users)
+const { nameFilter, phoneFilter, letterFilter, filteredUsers, availableLetters, clearFilters } = useUserFilters(users, page, limit)
 
 const handleLimitChange = (limit: number) => {
   setPage(1)
@@ -50,11 +50,31 @@ const handleLimitChange = (limit: number) => {
                 Поиск среди пациентов
               </v-card-title>
               <div class="d-flex mx-4 my-4 gap-4">
-                <v-text-field v-model="nameFilter" label="по имени" variant="underlined" clearable></v-text-field>
-                <v-text-field v-model="phoneFilter" label="по телефону" variant="underlined" clearable></v-text-field>
+                <v-text-field v-model="nameFilter" label="по имени" variant="underlined" clearable @update:modelValue="setPage(1)"></v-text-field>
+                <v-text-field v-model="phoneFilter" label="по телефону" variant="underlined" clearable @update:modelValue="setPage(1)"></v-text-field>
                 <v-btn @click="clearFilters" variant="outlined" color="secondary" class="mt-4">
                   Очистить
                 </v-btn>
+              </div>
+              
+              <!-- A-Z Letter Filter -->
+              <div class="mx-4 mb-4">
+                <div class="text-sm font-medium text-gray-700 mb-2">Фильтр по Фамилии:</div>
+                <div class="d-flex flex-wrap gap-1">
+                  <v-btn
+                    v-for="letter in availableLetters"
+                    :key="letter"
+                    :variant="letterFilter === letter ? 'elevated' : 'outlined'"
+                    :color="letterFilter === letter ? 'primary' : 'default'"
+                    size="small"
+                    @click="letterFilter = letterFilter === letter ? '' : letter"
+                    class="text-caption"
+                    min-width="32"
+                    height="32"
+                  >
+                    {{ letter }}
+                  </v-btn>
+                </div>
               </div>
             </v-card>
 

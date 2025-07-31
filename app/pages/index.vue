@@ -5,10 +5,15 @@ import { useUserFilters } from '~/composables/useUserFilters'
 
 const usersStore = useUsersStore()
 const { users, isLoading, error, page, pageCount } = storeToRefs(usersStore)
-const { setPage } = usersStore
+const { setPage, setLimit, limit, limitOptions } = usersStore
 
 // Use the filtering composable
 const { nameFilter, phoneFilter, filteredUsers, clearFilters } = useUserFilters(users)
+
+const handleLimitChange = (limit: number) => {
+  setPage(1)
+  setLimit(limit)
+}
 
 </script>
 
@@ -27,22 +32,13 @@ const { nameFilter, phoneFilter, filteredUsers, clearFilters } = useUserFilters(
           <!-- Loading State -->
           <v-card v-if="isLoading" class="mb-6">
             <v-card-text class="text-center py-8">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-                size="64"
-              ></v-progress-circular>
+              <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
               <p class="mt-4 text-gray-600">Загрузка</p>
             </v-card-text>
           </v-card>
 
           <!-- Error State -->
-          <v-alert
-            v-if="error"
-            type="error"
-            variant="tonal"
-            class="mb-6"
-          >
+          <v-alert v-if="error" type="error" variant="tonal" class="mb-6">
             {{ error.message }}
           </v-alert>
 
@@ -54,37 +50,16 @@ const { nameFilter, phoneFilter, filteredUsers, clearFilters } = useUserFilters(
                 Поиск среди пациентов
               </v-card-title>
               <div class="d-flex mx-4 my-4 gap-4">
-                <v-text-field 
-                  v-model="nameFilter"
-                  label="по имени" 
-                  variant="underlined"
-                  clearable
-                ></v-text-field>
-                <v-text-field 
-                  v-model="phoneFilter"
-                  label="по телефону" 
-                  variant="underlined"
-                  clearable
-                ></v-text-field>
-                <v-btn 
-                  @click="clearFilters"
-                  variant="outlined"
-                  color="secondary"
-                  class="mt-4"
-                >
+                <v-text-field v-model="nameFilter" label="по имени" variant="underlined" clearable></v-text-field>
+                <v-text-field v-model="phoneFilter" label="по телефону" variant="underlined" clearable></v-text-field>
+                <v-btn @click="clearFilters" variant="outlined" color="secondary" class="mt-4">
                   Очистить
                 </v-btn>
               </div>
             </v-card>
 
             <v-row>
-              <v-col
-                v-for="user in filteredUsers"
-                :key="user.id"
-                cols="12"
-                sm="6"
-                lg="4"
-              >
+              <v-col v-for="user in filteredUsers" :key="user.id" cols="12" sm="6" lg="4">
                 <UserCard :user="user" />
               </v-col>
             </v-row>
@@ -95,22 +70,24 @@ const { nameFilter, phoneFilter, filteredUsers, clearFilters } = useUserFilters(
                 mdi-account-off
               </v-icon>
               <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                No Users Found
+                {{ 'Ничего не найдено' }}
               </h3>
-              <p class="text-gray-600">
-                There are no users to display at the moment.
-              </p>
             </v-card>
           </div>
 
         </v-col>
       </v-row>
-      <v-pagination
-        v-model="page"
-        :length="pageCount"
-        @update:modelValue="setPage"
-        class="mt-8"
-      />
+      <div class="d-flex justify-center align-baseline">
+        <v-pagination v-model="page" :length="pageCount" @update:modelValue="setPage" class="mt-8 flex-grow-1" />
+        <v-select
+          v-model="limit"
+          :items="limitOptions"
+          label="Количество на странице"
+          density="compact"
+          variant="underlined"
+          @update:modelValue="handleLimitChange"
+        ></v-select>
+      </div>
     </v-container>
   </div>
 </template>

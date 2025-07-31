@@ -8,21 +8,37 @@ export const useUsersStore = defineStore('users', () => {
   const { users, isLoading, error, refetch } = useUsers()
 
   // For pagination controls
-  const total = computed(() => 0)
+  const total = computed(() => users.value?.length || 0)
   const pageCount = computed(() => Math.ceil(total.value / limit.value))
-  function setPage(newPage: number) {
+  const limitOptions = [6, 12, 24]
+
+  const setPage = (newPage: number) => {
     page.value = newPage
   }
 
+  const setLimit = (newLimit: number) => {
+    limit.value = newLimit
+  }
+
+  // Get paginated users based on current page and limit
+  const paginatedUsers = computed(() => {
+    if (!users.value) return []
+    const start = (page.value - 1) * limit.value
+    const end = start + limit.value
+    return users.value.slice(start, end)
+  })
+
   return {
-    users,
+    users: paginatedUsers,
     total,
     isLoading,
     error,
     page,
     limit,
+    limitOptions,
     pageCount,
     refetch,
     setPage,
+    setLimit,
   }
 }) 

@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
-import type { User } from '~/types/userTypes'
+import type { TUser } from '~/types/userTypes'
 
-export const useUserFilters = (users: Ref<User[] | undefined>, page: Ref<number>, limit: Ref<number>) => {
+export const useUserFilters = (users: Ref<TUser[] | undefined>, page: Ref<number>, limit: Ref<number>) => {
   const nameFilter = ref('')
   const phoneFilter = ref('')
   const letterFilter = ref('')

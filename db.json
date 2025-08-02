@@ -6,14 +6,14 @@
       "email": "kuznetsov.alexey@example.ru",
       "phone": "+7-17-555-1234",
       "company": {
-        "name": "ООО Берёза"
+        "name": "ООО Берёза Шумит"
       }
     },
     {
       "id": "5",
       "name": "Новикова Мария",
       "email": "novikova.maria@example.ru",
-      "phone": "+7-495-987-6543",
+      "phone": "+7-495-987-6545",
       "company": {
         "name": "ООО Лето"
       }
@@ -24,7 +24,7 @@
       "email": "vasiliev.dmitry@example.ru",
       "phone": "+7-812-654-3210",
       "company": {
-        "name": "ЗАО Север"
+        "name": "ЗАО Север Юг"
       }
     },
     {

@@ -1,6 +1,5 @@
-
 <script setup lang="ts">
-import type { User } from '~/types/userTypes'
+import type { TUser } from '~/types/userTypes'
 import UserForm from '~/components/userForm.vue'
 
 // Form data
@@ -20,7 +19,7 @@ const error = ref<string | null>(null)
 
 
 // API function to create user
-const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
+const createUser = async (userData: Omit<TUser, 'id'>): Promise<TUser> => {
   const response = await fetch('http://localhost:2311/users', {
     method: 'POST',
     headers: {
@@ -43,7 +42,7 @@ const handleSubmit = async () => {
 
   try {
     await createUser(formData.value)
-    
+
     // Reset form
     formData.value = {
       name: '',
@@ -51,15 +50,15 @@ const handleSubmit = async () => {
       phone: '',
       company: { name: '' }
     }
-    
+
     // Show success message
     showSuccess.value = true
-    
+
     // Hide success message after 3 seconds
     setTimeout(() => {
       showSuccess.value = false
     }, 3000)
-    
+
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Произошла неизвестная ошибка'
   } finally {
@@ -84,9 +83,7 @@ onMounted(() => {
         <v-col cols="12" md="8" lg="6">
           <!-- Header -->
           <div class="mb-8">
-            <v-breadcrumbs
-              :items="[{ title: 'Главная', to: '/' }, { title: 'Добавить пациента' }]"
-            ></v-breadcrumbs>
+            <v-breadcrumbs :items="[{ title: 'Главная', to: '/' }, { title: 'Добавить пациента' }]"></v-breadcrumbs>
             <h1 class="text-4xl font-bold text-gray-900 mb-2 ml-4">
               Добавить пациента
             </h1>
@@ -94,35 +91,17 @@ onMounted(() => {
           </div>
 
           <!-- Form Card -->
-          <UserForm 
-            :formData="formData" 
-            @submit="handleSubmit" 
-            :isSubmitting="isSubmitting" 
-            submitButtonText="Создать пациента"
-          />
+          <UserForm :formData="formData" @submit="handleSubmit" :isSubmitting="isSubmitting" />
 
           <!-- Success Alert -->
-          <v-alert
-            v-if="showSuccess"
-            type="success"
-            variant="tonal"
-            class="mt-6"
-            closable
-            @click:close="showSuccess = false"
-          >
+          <v-alert v-if="showSuccess" type="success" variant="tonal" class="mt-6" closable
+            @click:close="showSuccess = false">
             <template #title>Успешно!</template>
             Пациент успешно добавлен в систему.
           </v-alert>
 
           <!-- Error Alert -->
-          <v-alert
-            v-if="error"
-            type="error"
-            variant="tonal"
-            class="mt-6"
-            closable
-            @click:close="error = null"
-          >
+          <v-alert v-if="error" type="error" variant="tonal" class="mt-6" closable @click:close="error = null">
             <template #title>Ошибка!</template>
             {{ error }}
           </v-alert>

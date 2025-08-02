@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUsers } from '~/composables/useUsers'
 import { useUserFilters } from '~/composables/useUserFilters'
+import type { TUser } from '~/types/userTypes'
 
 export const useUsersStore = defineStore('users', () => {
   const page = ref(1)
@@ -34,6 +35,34 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  const updateUser = async (userData: TUser): Promise<void> => {
+    try {
+      const sanitizedUserData = {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        phone: userData.phone,
+        company: {
+          name: userData.company?.name
+        }
+      }
+
+      const response = await fetch(`http://localhost:2311/users/${userData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sanitizedUserData),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to update user')
+      }
+    } catch (error) {
+      console.error('Error updating user:', error)
+      throw error
+    }
+  }
+
   return {
     users,
     isLoading,
@@ -46,5 +75,6 @@ export const useUsersStore = defineStore('users', () => {
     setPage,
     setLimit,
     deleteUser,
+    updateUser,
   }
 }) 

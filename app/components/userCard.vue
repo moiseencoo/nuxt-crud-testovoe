@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { User } from '~/types/userTypes'
+import type { TUser } from '~/types/userTypes'
 
-const props = defineProps<{ user: User }>()
+const props = defineProps<{ user: TUser }>()
 const emit = defineEmits(['delete', 'edit'])
 
 const showDeleteDialog = ref(false)

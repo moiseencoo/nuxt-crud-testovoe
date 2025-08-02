@@ -2,11 +2,18 @@
 import { useUsersStore } from '~/stores/users'
 import UserCard from '~/components/userCard.vue'
 import { useUserFilters } from '~/composables/useUserFilters'
+import UserForm from '~/components/userForm.vue'
 
 const usersStore = useUsersStore()
 const { users, isLoading, error, page, limit, pageCount } = storeToRefs(usersStore)
-const { setPage, setLimit, limitOptions, deleteUser } = usersStore
+const { setPage, setLimit, limitOptions, deleteUser, updateUser } = usersStore
 
+// Dialog state
+const showEditDialog = ref(false)
+const editingUser = ref(null)
+const isSubmitting = ref(false)
+const showSuccess = ref(false)
+const errorEditingUser = ref<string | null>(null)
 
 // Use the filtering composable
 const { nameFilter, phoneFilter, letterFilter, filteredUsers, availableLetters, clearFilters } = useUserFilters(users, page, limit)
@@ -26,11 +33,42 @@ const handleDelete = async (id: string) => {
   await usersStore.refetch()
 }
 
-const handleEdit = (id: string) => {
-  console.log(id)
+const handleEdit = (userId: number) => {
+  const user = (users.value || []).find((user: TUser) => user.id === userId)
+  if (user) {
+    editingUser.value = { ...user } as TUser
+    showEditDialog.value = true
+  }
 }
 
-const goToCreate = () => {
+const handleSaveEditModal = async (updatedUser: TUser) => {
+  try {
+    isSubmitting.value = true
+    await updateUser(updatedUser)
+    await usersStore.refetch()
+    showEditDialog.value = false
+    editingUser.value = null
+    showSuccessMessage()
+  } catch (error) {
+    console.error('Error updating user:', error)
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const showSuccessMessage = () => {
+  showSuccess.value = true
+  setTimeout(() => {
+    showSuccess.value = false
+  }, 3000)
+}
+
+const handleCloseEditModal = () => {
+  showEditDialog.value = false
+  editingUser.value = null
+}
+
+const goToCreatePage = () => {
   navigateTo('/create')
 }
 
@@ -48,7 +86,7 @@ const goToCreate = () => {
                 {{ 'Карточки пациентов' }}
               </h1>
             </div>
-            <v-btn @click="goToCreate" class="mb-4 ma-2" color="blue-darken-3" rounded="2" variant="flat">
+            <v-btn @click="goToCreatePage" class="mb-4 ma-2" color="blue-darken-3" rounded="2" variant="flat">
               <v-icon icon="mdi-plus" start></v-icon>
               Добавить пациента</v-btn>
           </div>
@@ -123,5 +161,36 @@ const goToCreate = () => {
         </v-col>
       </v-row>
     </v-container>
+
+    <!-- Edit User Dialog -->
+    <v-dialog v-model="showEditDialog" max-width="600px" persistent @click:outside="handleCloseEditModal">
+      <v-card>
+        <v-card-title class="bg-primary text-white">
+          <v-icon start>mdi-account-edit</v-icon>
+          Редактировать пациента
+        </v-card-title>
+        <v-card-text class="pt-6">
+          <UserForm 
+            v-if="editingUser" 
+            :formData="editingUser" 
+            :isSubmitting="isSubmitting"
+            @submit="handleSaveEditModal" 
+            />
+          </v-card-text>
+      </v-card>
+    </v-dialog>
+     <!-- Success Alert -->
+    <v-alert v-if="showSuccess" type="success" variant="flat" closable position="fixed" 
+      style="top: 16px; right: 16px; z-index: 1000;"
+      @click:close="showSuccess = false">
+      <template #title>Успешно!</template>
+      Данные изменены.
+    </v-alert>
+
+    <!-- Error Alert -->
+    <v-alert v-if="errorEditingUser" type="error" variant="tonal" class="mt-6" closable @click:close="errorEditingUser = null">
+      <template #title>Ошибка!</template>
+      {{ errorEditingUser }}
+    </v-alert>
   </div>
 </template>

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/vue-query'
-import type { User } from '~/types/userTypes'
+import type { TUser } from '~/types/userTypes'
 
 // API function
-const fetchUsers = async (): Promise<User[]> => {
+const fetchUsers = async (): Promise<TUser[]> => {
   try {
     const response = await fetch(`http://localhost:2311/users`)
     if (!response.ok) {

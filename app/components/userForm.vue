@@ -1,38 +1,40 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     formData: {
         name: string
         email: string
         phone: string
         company: { name: string }
     },
-    isSubmitting: boolean,
-    submitButtonText: string
+    isSubmitting: boolean
 }>()
-const emit = defineEmits<{ (e: 'submit', data: any): void }>()
+const emit = defineEmits<{ (e: 'submit', data: TUser): void }>()
+
+const formData = computed(() => props.formData)
 
 // Validation rules
 const rules = {
-  required: (value: string) => !!value || 'Это поле обязательно для заполнения',
-  minLength: (value: string) => value.length >= 2 || 'Минимум 2 символа',
-  email: (value: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(value) || 'Введите корректный email'
-  },
-  phone: (value: string) => {
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/
-    return phoneRegex.test(value) || 'Введите корректный номер телефона'
-  }
+    required: (value: string) => !!value || 'Это поле обязательно для заполнения',
+    minLength: (value: string) => value.length >= 2 || 'Минимум 2 символа',
+    email: (value: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return emailRegex.test(value) || 'Введите корректный email'
+    },
+    phone: (value: string) => {
+        const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/
+        return phoneRegex.test(value) || 'Введите корректный номер телефона'
+    }
 }
 
 const form = ref()
 
 const handleSubmit = async () => {
     const { valid } = await form.value.validate()
-  
     if (!valid) return
-    emit('submit', form.value)
+
+    emit('submit', formData.value)
     form.value.reset()
 }
 
@@ -75,7 +77,7 @@ const handleSubmit = async () => {
                     <v-btn type="submit" color="primary" size="large" :loading="isSubmitting" :disabled="isSubmitting"
                         class="px-8">
                         <v-icon start>mdi-plus</v-icon>
-                        {{ isSubmitting ? 'Обработка...' : submitButtonText }}
+                        {{ isSubmitting ? 'Обработка...' : 'Сохранить' }}
                     </v-btn>
                 </v-col>
             </v-row>

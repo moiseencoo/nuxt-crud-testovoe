@@ -10,7 +10,7 @@ export const useUsersStore = defineStore('users', () => {
   const companyFilter = ref<string>('')
   const sortDirection = ref<'asc' | 'desc' | 'none'>('none')
   const { users, isLoading, error, refetch } = useUsers()
-  const { filteredUsers: filteredUsersBySearch, clearFilters, userCompanies, filteredUsersByCompany } = useUserFilters(users, searchFilter, companyFilter as Ref<string>)
+  const { filteredUsers: filteredUsersBySearch, userCompanies, filteredUsersByCompany } = useUserFilters(users, searchFilter, companyFilter as Ref<string>)
  
   const totalUsers = computed(() => usersList?.value.length || users.value?.length || 0)
   const pageCount = computed(() => Math.ceil(totalUsers.value / limit.value))
@@ -18,6 +18,11 @@ export const useUsersStore = defineStore('users', () => {
 
   // Reset page when search filter changes
   watch(searchFilter, () => {
+    page.value = 1
+  })
+
+  // Reset page when companyfilter changes
+  watch(companyFilter, () => {
     page.value = 1
   })
 
@@ -64,7 +69,6 @@ export const useUsersStore = defineStore('users', () => {
     filteredUsers,
     searchFilter,
     companyFilter,
-    clearFilters,
     userCompanies,
     sortDirection,
   }

@@ -157,10 +157,7 @@
       "id": "1e2d",
       "name": "Иванов Ванечка",
       "email": "ivanov.vanechka@example.ru",
-      "phone": "234343444234",
-      "company": {
-        "name": "Ozonaturus"
-      }
+      "phone": "234343444234"
     }
   ]
 }

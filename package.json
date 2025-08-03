@@ -8,7 +8,10 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "api": "json-server db.json --port 2311"
+    "api": "json-server db.json --port 2311",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -22,10 +25,15 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.10",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vitest/ui": "^2.1.8",
+    "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.21",
+    "jsdom": "^25.0.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11",
     "vite-plugin-vuetify": "^2.1.1",
+    "vitest": "^2.1.8",
     "vuetify": "^3.9.3"
   }
 }

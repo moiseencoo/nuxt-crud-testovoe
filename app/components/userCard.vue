@@ -28,7 +28,7 @@ const cancelDelete = () => {
                 </v-avatar>
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900"> {{ user.name }} </h3>
-                    <p class="text-sm text-gray-600"> {{ user.company.name }} </p>
+                    <p v-if="user.company?.name" class="text-sm text-gray-600"> {{ user.company.name }} </p>
                 </div>
             </div>
 

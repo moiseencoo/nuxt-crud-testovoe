@@ -14,7 +14,7 @@ export const useUserFilters = (users: Ref<TUser[] | undefined>, searchFilter: Re
       const nameMatch = user.name.toLowerCase().includes(searchTerm)
       const emailMatch = user.email.toLowerCase().includes(searchTerm)
       const companyMatch = user.company?.name?.toLowerCase().includes(searchTerm) || false
-      const phoneMatch = user.phone.replace(/[-+\s]/g, '').includes(searchFilter.value.replace(/[-+\s]/g, ''))
+      const phoneMatch = user.phone.replace(/[-+()\s]/g, '').includes(searchFilter.value.replace(/[-+\s]/g, ''))
       
       return nameMatch || emailMatch || companyMatch || phoneMatch
     })
@@ -23,8 +23,11 @@ export const useUserFilters = (users: Ref<TUser[] | undefined>, searchFilter: Re
   })
 
   const filteredUsersByCompany = computed(() => {
-    if (!filteredUsers.value) return []
-    return filteredUsers.value.filter(user => user.company?.name?.toLowerCase().includes(companyFilter.value.toLowerCase()))
+    if (!filteredUsers.value || !companyFilter.value) return []
+    return filteredUsers.value.filter(user => {
+      if (!user.company?.name) return false
+      return user.company.name === companyFilter.value
+    })
   })
 
   const userCompanies = computed(() => {
@@ -32,13 +35,8 @@ export const useUserFilters = (users: Ref<TUser[] | undefined>, searchFilter: Re
     return [...new Set(users.value.map(user => user.company?.name))]
   })
 
-  const clearFilters = () => {
-    searchFilter.value = ''
-  }
-
   return {
     filteredUsers,
-    clearFilters,
     filteredUsersByCompany,
     userCompanies,
   }

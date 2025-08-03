@@ -1,0 +1,17 @@
+{
+  "name": "user-api-backend",
+  "version": "1.0.0",
+  "description": "JSON Server backend for user management",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "json-server db.json --port 2311"
+  },
+  "dependencies": {
+    "json-server": "^1.0.0-beta.3",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 

@@ -1,9 +1,9 @@
 export interface TUser {
-    id: number
+    id?: number | string
     name: string
     email: string
     phone: string
-    company: {
-        name: string
+    company?: {
+        name?: string
     }
 }

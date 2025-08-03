@@ -2,6 +2,9 @@ import { useQuery } from '@tanstack/vue-query'
 import type { TUser } from '~/types/userTypes'
 import { z } from 'zod'
 
+const API_URL = 'http://localhost:2311'
+export const API_URL_USERS = `${API_URL}/users`
+
 // Validation schemas
 const CompanySchema = z.object({
   name: z.string().optional()
@@ -29,7 +32,7 @@ const validateUsers = (data: unknown): TUser[] => {
 // API function
 const fetchUsers = async (): Promise<TUser[]> => {
   try {
-    const response = await fetch(`http://localhost:2311/users`)
+    const response = await fetch(API_URL_USERS)
     if (!response.ok) {
       throw new Error('Failed to fetch users')
     }
@@ -48,7 +51,7 @@ const fetchUsers = async (): Promise<TUser[]> => {
 
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const response = await fetch(`http://localhost:2311/users/${id}`, {
+    const response = await fetch(`${API_URL_USERS}/${id}`, {
       method: 'DELETE',
     })
     if (!response.ok) {
@@ -75,7 +78,7 @@ export const updateUser = async (userData: TUser): Promise<void> => {
       }
     }
 
-    const response = await fetch(`http://localhost:2311/users/${validatedUserData.id}`, {
+    const response = await fetch(`${API_URL_USERS}/${validatedUserData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

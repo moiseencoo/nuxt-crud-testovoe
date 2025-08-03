@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TUser } from '~/types/userTypes'
 import UserForm from '~/components/userForm.vue'
+import { API_URL_USERS } from '~/composables/useUsersApi'
 
 // Form data
 const formData = ref({
@@ -20,7 +21,7 @@ const error = ref<string | null>(null)
 
 // API function to create user
 const createUser = async (userData: Omit<TUser, 'id'>): Promise<TUser> => {
-  const response = await fetch('http://localhost:2311/users', {
+  const response = await fetch(API_URL_USERS, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

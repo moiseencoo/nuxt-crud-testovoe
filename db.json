@@ -40,7 +40,7 @@
       "id": "8",
       "name": "Ковалёв Сергей",
       "email": "kovalev.sergey@example.ru",
-      "phone": "+375-17-222-3333",
+      "phone": "+7-17-222-3333",
       "company": {
         "name": "ООО Лесник"
       }
@@ -151,15 +151,6 @@
       "phone": "+7-812-234-5678",
       "company": {
         "name": "ООО Полюс"
-      }
-    },
-    {
-      "id": "2c5b",
-      "name": "Пациентов Пациент",
-      "email": "pacient@gmail.com",
-      "phone": "+7123123232",
-      "company": {
-        "name": "Patience"
       }
     },
     {

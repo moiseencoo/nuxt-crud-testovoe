@@ -1,31 +1,25 @@
 <script setup lang="ts">
 import { useUsersStore } from '~/stores/users'
 import UserCard from '~/components/userCard.vue'
-import { useUserFilters } from '~/composables/useUserFilters'
 import UserForm from '~/components/userForm.vue'
+import UserFiltration from '~/components/userFiltration.vue'
+import type { TUser } from '~/types/userTypes'
 
 const usersStore = useUsersStore()
-const { users, isLoading, error, page, limit, pageCount } = storeToRefs(usersStore)
-const { setPage, setLimit, limitOptions, deleteUser, updateUser } = usersStore
+const { users, isLoading, error, page, limit, pageCount, filteredUsers } = storeToRefs(usersStore)
+const { setPage, setLimit, limitOptions } = usersStore
+import { deleteUser, updateUser } from '~/composables/useUsersApi'
 
 // Dialog state
 const showEditDialog = ref(false)
-const editingUser = ref(null)
+const editingUser = ref<TUser | null>(null)
 const isSubmitting = ref(false)
 const showSuccess = ref(false)
 const errorEditingUser = ref<string | null>(null)
 
-// Use the filtering composable
-const { nameFilter, phoneFilter, letterFilter, filteredUsers, availableLetters, clearFilters } = useUserFilters(users, page, limit)
-
 const handleLimitChange = (limit: number) => {
   setPage(1)
   setLimit(limit)
-}
-
-const handleLetterFilter = (letter: string) => {
-  letterFilter.value = letterFilter.value === letter ? '' : letter
-  setPage(1)
 }
 
 const handleDelete = async (id: string) => {
@@ -106,37 +100,10 @@ const goToCreatePage = () => {
 
           <!-- Users List -->
           <div v-if="!isLoading && !error">
-            <v-card class="mb-6">
-              <v-card-title class="bg-primary text-white">
-                <v-icon start>mdi-account-group</v-icon>
-                Фильтр
-              </v-card-title>
-              <div class="d-flex mx-4 my-4 gap-4">
-                <v-text-field v-model="nameFilter" label="по имени" variant="underlined" clearable
-                  @update:modelValue="handleLimitChange(limit)"></v-text-field>
-                <v-text-field v-model="phoneFilter" label="по телефону" variant="underlined" clearable
-                  @update:modelValue="handleLimitChange(limit)"></v-text-field>
-                <v-btn @click="clearFilters" variant="outlined" color="secondary" class="mt-4">
-                  Очистить
-                </v-btn>
-              </div>
-
-              <!-- A-Z Letter Filter -->
-              <div class="mx-4 mb-4">
-                <div class="text-sm font-medium text-gray-700 mb-2">Фильтр по Фамилии:</div>
-                <div class="d-flex flex-wrap gap-1">
-                  <v-btn v-for="letter in availableLetters" :key="letter"
-                    :variant="letterFilter === letter ? 'elevated' : 'outlined'"
-                    :color="letterFilter === letter ? 'primary' : 'default'" size="small"
-                    @click="handleLetterFilter(letter)" class="text-caption" min-width="32" height="32">
-                    {{ letter }}
-                  </v-btn>
-                </div>
-              </div>
-            </v-card>
+            <UserFiltration />
 
             <v-row>
-              <v-col v-for="user in filteredUsers" :key="user.id" cols="12" sm="6" lg="4">
+              <v-col v-for="user in filteredUsers" :key="user.id" cols="12" md="6">
                 <UserCard :user="user" @delete="handleDelete" @edit="handleEdit" />
               </v-col>
             </v-row>

@@ -1,18 +1,25 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import { useUsers } from '~/composables/useUsers'
+import { ref, computed, watch } from 'vue'
+import { useUsers } from '~/composables/useUsersApi'
 import { useUserFilters } from '~/composables/useUserFilters'
-import type { TUser } from '~/types/userTypes'
 
 export const useUsersStore = defineStore('users', () => {
   const page = ref(1)
   const limit = ref(6)
+  const searchFilter = ref('')
+  const companyFilter = ref<string>('')
+  const sortDirection = ref<'asc' | 'desc' | 'none'>('none')
   const { users, isLoading, error, refetch } = useUsers()
-  const { getFilteredUsersCount } = useUserFilters(users, page, limit)
+  const { filteredUsers: filteredUsersBySearch, clearFilters, userCompanies, filteredUsersByCompany } = useUserFilters(users, searchFilter, companyFilter as Ref<string>)
  
-  const totalUsers = computed(() => getFilteredUsersCount?.value || users.value?.length || 0)
+  const totalUsers = computed(() => usersList?.value.length || users.value?.length || 0)
   const pageCount = computed(() => Math.ceil(totalUsers.value / limit.value))
   const limitOptions = [6, 12, 24]
+
+  // Reset page when search filter changes
+  watch(searchFilter, () => {
+    page.value = 1
+  })
 
   const setPage = (newPage: number) => {
     page.value = newPage
@@ -22,46 +29,26 @@ export const useUsersStore = defineStore('users', () => {
     limit.value = newLimit
   }
 
-  const deleteUser = async (id: string): Promise<void> => {
-    try {
-      const response = await fetch(`http://localhost:2311/users/${id}`, {
-        method: 'DELETE',
-      })
-      if (!response.ok) {
-        throw new Error('Failed to delete user')
-      }
-    } catch (error) {
-      console.error('Error deleting user:', error)
+  const sortUsers = (users: TUser[]) => {
+    if (sortDirection.value === 'asc') {
+      return users.sort((a, b) => a.name.localeCompare(b.name))
     }
+    return users.sort((a, b) => b.name.localeCompare(a.name))
   }
 
-  const updateUser = async (userData: TUser): Promise<void> => {
-    try {
-      const sanitizedUserData = {
-        id: userData.id,
-        name: userData.name,
-        email: userData.email,
-        phone: userData.phone,
-        company: {
-          name: userData.company?.name
-        }
-      }
-
-      const response = await fetch(`http://localhost:2311/users/${userData.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sanitizedUserData),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to update user')
-      }
-    } catch (error) {
-      console.error('Error updating user:', error)
-      throw error
+  const usersList = computed(() => {
+    const userList = companyFilter.value ? filteredUsersByCompany.value : filteredUsersBySearch.value
+    if (sortDirection.value === 'none') {
+      return userList
     }
-  }
+    return sortUsers([...userList])
+  })
+
+  const filteredUsers = computed(() => {
+    const start = (page.value - 1) * limit.value
+    const end = start + limit.value
+    return usersList.value.slice(start, end)
+  })
 
   return {
     users,
@@ -74,7 +61,11 @@ export const useUsersStore = defineStore('users', () => {
     refetch,
     setPage,
     setLimit,
-    deleteUser,
-    updateUser,
+    filteredUsers,
+    searchFilter,
+    companyFilter,
+    clearFilters,
+    userCompanies,
+    sortDirection,
   }
 }) 

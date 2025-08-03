@@ -1,69 +1,45 @@
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import type { TUser } from '~/types/userTypes'
 
-export const useUserFilters = (users: Ref<TUser[] | undefined>, page: Ref<number>, limit: Ref<number>) => {
-  const nameFilter = ref('')
-  const phoneFilter = ref('')
-  const letterFilter = ref('')
-  const filteredTotal = ref(0)
-
+export const useUserFilters = (users: Ref<TUser[] | undefined>, searchFilter: Ref<string>, companyFilter: Ref<string>) => {
   const filteredUsers = computed(() => {
     if (!users.value) return []
     
     const filteredUsers = users.value.filter(user => {
-      const nameMatch = !nameFilter.value || 
-        user.name.toLowerCase().includes(nameFilter.value.toLowerCase())
+      if (!searchFilter.value) return true
       
-      const phoneMatch = !phoneFilter.value || 
-        user.phone.replace(/[^\d]/g, '').includes(phoneFilter.value.replace(/[^\d]/g, ''))
+      const searchTerm = searchFilter.value.toLowerCase()
       
-      const letterMatch = !letterFilter.value || 
-        user.name.charAt(0).toLowerCase() === letterFilter.value.toLowerCase()
+      // Search across all user fields
+      const nameMatch = user.name.toLowerCase().includes(searchTerm)
+      const emailMatch = user.email.toLowerCase().includes(searchTerm)
+      const companyMatch = user.company?.name?.toLowerCase().includes(searchTerm) || false
+      const phoneMatch = user.phone.replace(/[-+\s]/g, '').includes(searchFilter.value.replace(/[-+\s]/g, ''))
       
-      return nameMatch && phoneMatch && letterMatch
+      return nameMatch || emailMatch || companyMatch || phoneMatch
     })
 
-    setFilteredUsersCount(filteredUsers.length)
-
-    const start = (page.value - 1) * limit.value
-    const end = start + limit.value
-    return filteredUsers.slice(start, end)
+    return filteredUsers
   })
 
-  // Get available letters from user names
-  const availableLetters = computed(() => {
+  const filteredUsersByCompany = computed(() => {
+    if (!filteredUsers.value) return []
+    return filteredUsers.value.filter(user => user.company?.name?.toLowerCase().includes(companyFilter.value.toLowerCase()))
+  })
+
+  const userCompanies = computed(() => {
     if (!users.value) return []
-    
-    const letters = new Set<string>()
-    users.value.forEach(user => {
-      const firstLetter = user.name.charAt(0).toUpperCase()
-      if (firstLetter.match(/[A-ZА-Я]/)) {
-        letters.add(firstLetter)
-      }
-    })
-    
-    return Array.from(letters).sort()
+    return [...new Set(users.value.map(user => user.company?.name))]
   })
-
-  const setFilteredUsersCount = (count: number) => {
-    filteredTotal.value = count
-  }
-
-  const getFilteredUsersCount = computed(() => filteredTotal.value)
 
   const clearFilters = () => {
-    nameFilter.value = ''
-    phoneFilter.value = ''
-    letterFilter.value = ''
+    searchFilter.value = ''
   }
 
   return {
-    nameFilter,
-    phoneFilter,
-    letterFilter,
     filteredUsers,
-    availableLetters,
-    getFilteredUsersCount,
     clearFilters,
+    filteredUsersByCompany,
+    userCompanies,
   }
 } 

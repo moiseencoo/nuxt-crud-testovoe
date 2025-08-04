@@ -14,8 +14,13 @@ server.use(middlewares)
 // Use the router on /api
 server.use('/api', router)
 
-// Start server
-const port = process.env.PORT || 2311
-server.listen(port, () => {
-  console.log(`JSON Server is running on port ${port}`)
-}) 
+// Export for Vercel
+module.exports = server
+
+// Start server (only if not in Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  const port = process.env.PORT || 2311
+  server.listen(port, () => {
+    console.log(`JSON Server is running on port ${port}`)
+  })
+} 

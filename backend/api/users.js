@@ -1,4 +1,4 @@
-const users = require('../db.json').users
+const users = require('../../db.json').users
 
 module.exports = (req, res) => {
   // Enable CORS

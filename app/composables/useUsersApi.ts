@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/vue-query'
 import type { TUser } from '~/types/userTypes'
 import { z } from 'zod'
 
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? process.env.NUXT_PUBLIC_API_URL
-  : 'http://localhost:2311'
-export const API_URL_USERS = `${API_URL}/users`
+// Helper function to get API URL
+const getApiUrl = () => {
+  const config = useRuntimeConfig()
+  return config.public.apiUrl || 'http://localhost:2311'
+}
 
 // Validation schemas
 const CompanySchema = z.object({
@@ -34,7 +35,8 @@ const validateUsers = (data: unknown): TUser[] => {
 // API function
 const fetchUsers = async (): Promise<TUser[]> => {
   try {
-    const response = await fetch(API_URL_USERS)
+    const apiUrl = getApiUrl()
+    const response = await fetch(`${apiUrl}/users`)
     if (!response.ok) {
       throw new Error('Failed to fetch users')
     }
@@ -53,7 +55,8 @@ const fetchUsers = async (): Promise<TUser[]> => {
 
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const response = await fetch(`${API_URL_USERS}/${id}`, {
+    const apiUrl = getApiUrl()
+    const response = await fetch(`${apiUrl}/users/${id}`, {
       method: 'DELETE',
     })
     if (!response.ok) {
@@ -69,6 +72,7 @@ export const updateUser = async (userData: TUser): Promise<void> => {
   try {
     // Validate input data
     const validatedUserData = validateUser(userData)
+    const apiUrl = getApiUrl()
     
     const sanitizedUserData = {
       id: validatedUserData.id,
@@ -80,7 +84,7 @@ export const updateUser = async (userData: TUser): Promise<void> => {
       }
     }
 
-    const response = await fetch(`${API_URL_USERS}/${validatedUserData.id}`, {
+    const response = await fetch(`${apiUrl}/users/${validatedUserData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -113,8 +117,9 @@ export const updateUser = async (userData: TUser): Promise<void> => {
 
       console.error('Ошибка валидации:', fieldErrors)
       throw new Error(`Ошибка при заполнении формы: ${fieldErrors}`)
+    }
+    throw error
   }
-}
 }
 
 // API function to create user
@@ -122,6 +127,7 @@ export const createUser = async (userData: Omit<TUser, 'id'>): Promise<TUser> =>
   try {
     // Validate input data
     const validatedUserData = validateUser(userData)
+    const apiUrl = getApiUrl()
 
     const sanitizedUserData = {
       name: validatedUserData.name,
@@ -132,7 +138,7 @@ export const createUser = async (userData: Omit<TUser, 'id'>): Promise<TUser> =>
       }
     }
 
-    const response = await fetch(API_URL_USERS, {
+    const response = await fetch(`${apiUrl}/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

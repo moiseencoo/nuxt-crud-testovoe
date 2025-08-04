@@ -8,6 +8,6 @@
     "healthcheckPath": "/api/users",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 3
   }
 } 

@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import type { TUser } from '~/types/userTypes'
 import UserForm from '~/components/userForm.vue'
-import { API_URL_USERS } from '~/composables/useUsersApi'
+import { useUsersStore } from '~/stores/users'
+import { createUser } from '~/composables/useUsersApi'
+import { NuxtLink } from '#components'
+
+const userStore = useUsersStore()
 
 // Form data
 const formData = ref({
@@ -18,48 +21,34 @@ const isSubmitting = ref(false)
 const showSuccess = ref(false)
 const error = ref<string | null>(null)
 
-
-// API function to create user
-const createUser = async (userData: Omit<TUser, 'id'>): Promise<TUser> => {
-  const response = await fetch(API_URL_USERS, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  })
-
-  if (!response.ok) {
-    throw new Error('Ошибка при создании пользователя')
-  }
-
-  return response.json()
-}
-
 // Handle form submission
 const handleSubmit = async () => {
   isSubmitting.value = true
   error.value = null
 
   try {
-    await createUser(formData.value)
-
-    // Reset form
-    formData.value = {
-      name: '',
-      email: '',
-      phone: '',
-      company: { name: '' }
+    const createdUser = await createUser(formData.value)
+    console.log(createdUser)
+    
+    // Only proceed if we got back a valid user with an ID
+    if (createdUser && createdUser.id) {
+      await userStore.refetch()
+      // Reset form
+      formData.value = {
+        name: '',
+        email: '',
+        phone: '',
+        company: { name: '' }
+      }
+  
+      // Show success message
+      showSuccess.value = true
+  
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        showSuccess.value = false
+      }, 5000)
     }
-
-    // Show success message
-    showSuccess.value = true
-
-    // Hide success message after 3 seconds
-    setTimeout(() => {
-      showSuccess.value = false
-    }, 3000)
-
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Произошла неизвестная ошибка'
   } finally {
@@ -98,7 +87,8 @@ onMounted(() => {
           <v-alert v-if="showSuccess" type="success" variant="tonal" class="mt-6" closable
             @click:close="showSuccess = false">
             <template #title>Успешно!</template>
-            Пациент успешно добавлен в систему.
+            Пациент успешно добавлен в систему. <br />
+            <NuxtLink to="/" class="text-primary text-decoration-underline hover:text-primary-darken-1">Вернуться на главную</NuxtLink>
           </v-alert>
 
           <!-- Error Alert -->

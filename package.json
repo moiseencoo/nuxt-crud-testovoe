@@ -10,9 +10,7 @@
     "start": "nuxt preview",
     "postinstall": "nuxt prepare",
     "api": "json-server db.json --port 2311",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test": "vitest"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",

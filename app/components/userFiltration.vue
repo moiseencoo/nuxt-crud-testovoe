@@ -7,7 +7,7 @@ const { searchFilter, companyFilter, userCompanies, sortDirection } = storeToRef
 
 <template>
     <v-row>
-        <v-col cols="12">
+        <v-col cols="12" md="7">
             <v-card class="mb-4">
                 <v-card-title class="bg-primary text-white">
                     <v-icon start>mdi-magnify</v-icon>
@@ -26,7 +26,7 @@ const { searchFilter, companyFilter, userCompanies, sortDirection } = storeToRef
                 </v-card-text>
             </v-card>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md="5">
             <v-card class="mb-4">
                 <v-card-title class="bg-primary text-white">
                     <v-icon start>mdi-filter</v-icon>
@@ -40,7 +40,7 @@ const { searchFilter, companyFilter, userCompanies, sortDirection } = storeToRef
                         variant="underlined"
                         clearable
                         :items="userCompanies"
-                        placeholder="Выбрвть по компании"
+                        placeholder="Выбрать по компании"
                     />
                 </v-card-text>
             </v-card>
@@ -58,6 +58,12 @@ const { searchFilter, companyFilter, userCompanies, sortDirection } = storeToRef
                         class="mt-4"
                         mandatory
                     >
+                        <v-btn value="new_first">
+                            Сначала новые
+                        </v-btn>
+                        <v-btn value="old_first">
+                            Сначала старые
+                        </v-btn>
                         <v-btn value="asc">
                             <v-icon start>mdi-sort-alphabetical-ascending</v-icon>
                             А-Я
@@ -65,10 +71,6 @@ const { searchFilter, companyFilter, userCompanies, sortDirection } = storeToRef
                         <v-btn value="desc">
                             <v-icon start>mdi-sort-alphabetical-descending</v-icon>
                             Я-А
-                        </v-btn>
-                        <v-btn value="none">
-                            <v-icon start>mdi-sort-alphabetical-ascending</v-icon>
-                            Сбросить
                         </v-btn>
                     </v-btn-toggle>
                 </v-card-text>

@@ -6,7 +6,7 @@ const props = defineProps<{
         name: string
         email: string
         phone: string
-        company: { name: string }
+        company?: { name?: string }
     },
     isSubmitting: boolean
 }>()
@@ -23,7 +23,7 @@ const rules = {
         return emailRegex.test(value) || 'Введите корректный email'
     },
     phone: (value: string) => {
-        const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/
+        const phoneRegex = /^[\+]?(?:[0-9][\s\-\(\)]*){7,}$/
         return phoneRegex.test(value) || 'Введите корректный номер телефона'
     }
 }
@@ -35,7 +35,6 @@ const handleSubmit = async () => {
     if (!valid) return
 
     emit('submit', formData.value)
-    form.value.reset()
 }
 
 </script>
@@ -67,8 +66,7 @@ const handleSubmit = async () => {
 
                 <!-- Company Name Field -->
                 <v-col cols="12">
-                    <v-text-field v-model="formData.company.name" label="Название компании" variant="outlined"
-                        :rules="[rules.required]" validate-on="blur" required
+                    <v-text-field v-model="formData.company.name" label="Название компании" variant="outlined" validate-on="blur" required
                         prepend-inner-icon="mdi-domain"></v-text-field>
                 </v-col>
 

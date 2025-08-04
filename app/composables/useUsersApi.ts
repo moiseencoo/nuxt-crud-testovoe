@@ -3,7 +3,7 @@ import type { TUser } from '~/types/userTypes'
 import { z } from 'zod'
 
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? process.env.NUXT_PUBLIC_API_URL || 'https://your-backend-url.railway.app'
+  ? process.env.NUXT_PUBLIC_API_URL
   : 'http://localhost:2311'
 export const API_URL_USERS = `${API_URL}/users`
 
@@ -13,7 +13,7 @@ const CompanySchema = z.object({
 })
 
 const UserSchema = z.object({
-  id: z.union([z.string(), z.number().transform(num => num.toString())]),
+  id: z.union([z.string(), z.number().transform(num => num.toString())]).optional(),
   name: z.string(),
   email: z.string().email(),
   phone: z.string(),
@@ -92,10 +92,83 @@ export const updateUser = async (userData: TUser): Promise<void> => {
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('Input validation error:', error.errors)
-      throw new Error('Invalid user data provided')
+      const fieldErrors = error.errors.map(err => {
+        const field = err.path[0]
+        let message = 'Неверное значение'
+        
+        switch(field) {
+          case 'name':
+            message = 'Имя пользователя обязательно для заполнения'
+            break
+          case 'email':
+            message = 'Введите корректный email адрес'
+            break
+          case 'phone':
+            message = 'Введите корректный номер телефона'
+            break
+        }
+        
+        return `${message} (поле "${field}")`
+      }).join('; ')
+
+      console.error('Ошибка валидации:', fieldErrors)
+      throw new Error(`Ошибка при заполнении формы: ${fieldErrors}`)
+  }
+}
+}
+
+// API function to create user
+export const createUser = async (userData: Omit<TUser, 'id'>): Promise<TUser> => {
+  try {
+    // Validate input data
+    const validatedUserData = validateUser(userData)
+
+    const sanitizedUserData = {
+      name: validatedUserData.name,
+      email: validatedUserData.email,
+      phone: validatedUserData.phone,
+      company: {
+        name: validatedUserData.company?.name
+      }
     }
-    console.error('Error updating user:', error)
+
+    const response = await fetch(API_URL_USERS, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(sanitizedUserData),
+    })
+
+    if (!response.ok) {
+      throw new Error('Ошибка при создании пользователя')
+    }
+
+    return response.json()
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const fieldErrors = error.errors.map(err => {
+        const field = err.path[0]
+        let message = 'Неверное значение'
+        
+        switch(field) {
+          case 'name':
+            message = 'Имя пользователя обязательно для заполнения'
+            break
+          case 'email':
+            message = 'Введите корректный email адрес'
+            break
+          case 'phone':
+            message = 'Введите корректный номер телефона'
+            break
+        }
+        
+        return `${message} (поле "${field}")`
+      }).join('; ')
+
+      console.error('Ошибка валидации:', fieldErrors)
+      throw new Error(`Ошибка при заполнении формы: ${fieldErrors}`)
+    }
     throw error
   }
 }

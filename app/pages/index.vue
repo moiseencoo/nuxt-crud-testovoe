@@ -45,6 +45,7 @@ const handleSaveEditModal = async (updatedUser: TUser) => {
     showSuccessMessage()
   } catch (error) {
     console.error('Error updating user:', error)
+    errorEditingUser.value = 'Ошибка при обновлении данных'
   } finally {
     isSubmitting.value = false
   }
@@ -54,12 +55,13 @@ const showSuccessMessage = () => {
   showSuccess.value = true
   setTimeout(() => {
     showSuccess.value = false
-  }, 3000)
+  }, 5000)
 }
 
 const handleCloseEditModal = () => {
   showEditDialog.value = false
   editingUser.value = null
+  errorEditingUser.value = null
 }
 
 const goToCreatePage = () => {

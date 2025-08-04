@@ -32,7 +32,8 @@ export const useUserFilters = (users: Ref<TUser[] | undefined>, searchFilter: Re
 
   const userCompanies = computed(() => {
     if (!users.value) return []
-    return [...new Set(users.value.map(user => user.company?.name))]
+    const set = [...new Set(users.value.map(user => user.company?.name))]
+    return set.filter(company => company)
   })
 
   return {

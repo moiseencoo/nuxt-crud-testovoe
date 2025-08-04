@@ -91,15 +91,6 @@
       }
     },
     {
-      "id": "14",
-      "name": "Тарасов Игорь",
-      "email": "tarasov.igor@example.ru",
-      "phone": "+7-812-999-0000",
-      "company": {
-        "name": "ЗАО Ветер"
-      }
-    },
-    {
       "id": "15",
       "name": "Орлова Светлана",
       "email": "orlova.svetlana@example.ru",
@@ -154,10 +145,31 @@
       }
     },
     {
-      "id": "1e2d",
-      "name": "Иванов Ванечка",
-      "email": "ivanov.vanechka@example.ru",
-      "phone": "234343444234"
+      "id": "b90c",
+      "name": "Куропаткин Роман",
+      "email": "r.kuropatkin@mail.co.uk",
+      "phone": "+9982334222345",
+      "company": {
+        "name": ""
+      }
+    },
+    {
+      "id": "af99",
+      "name": "Новиков Алексей",
+      "email": "a.novikob@kob.ru",
+      "phone": "1234567784",
+      "company": {
+        "name": ""
+      }
+    },
+    {
+      "id": "dea0",
+      "name": "Коренов Кирилл",
+      "email": "k.korenov@mail.ru",
+      "phone": "+7845332255",
+      "company": {
+        "name": "ООО Берёзы Шумят"
+      }
     }
   ]
 }

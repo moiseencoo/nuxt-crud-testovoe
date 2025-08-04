@@ -7,14 +7,14 @@ export const useUsersStore = defineStore('users', () => {
   const page = ref(1)
   const limit = ref(6)
   const searchFilter = ref('')
-  const companyFilter = ref<string>('')
-  const sortDirection = ref<'asc' | 'desc' | 'none'>('none')
+  const companyFilter = ref<string | null>(null)
+  const sortDirection = ref<'asc' | 'desc' | 'old_first' | 'new_first'>('new_first')
   const { users, isLoading, error, refetch } = useUsers()
   const { filteredUsers: filteredUsersBySearch, userCompanies, filteredUsersByCompany } = useUserFilters(users, searchFilter, companyFilter as Ref<string>)
  
-  const totalUsers = computed(() => usersList?.value.length || users.value?.length || 0)
+  const totalUsers = computed(() => usersList?.value.length || 0)
   const pageCount = computed(() => Math.ceil(totalUsers.value / limit.value))
-  const limitOptions = [6, 12, 24]
+  const limitOptions = [6, 12, 24, 48]
 
   // Reset page when search filter changes
   watch(searchFilter, () => {
@@ -43,8 +43,11 @@ export const useUsersStore = defineStore('users', () => {
 
   const usersList = computed(() => {
     const userList = companyFilter.value ? filteredUsersByCompany.value : filteredUsersBySearch.value
-    if (sortDirection.value === 'none') {
+    if (sortDirection.value === 'old_first') {
       return userList
+    }
+    if (sortDirection.value === 'new_first') {
+      return [...userList].reverse()
     }
     return sortUsers([...userList])
   })

@@ -3,9 +3,9 @@ import type { TUser } from '~/types/userTypes'
 import { z } from 'zod'
 
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? process.env.NUXT_PUBLIC_API_URL || 'https://your-backend-url.railway.app/api'
+  ? process.env.NUXT_PUBLIC_API_URL || 'https://your-backend-url.railway.app'
   : 'http://localhost:2311'
-export const API_URL_USERS = `${API_URL}/users`
+export const API_URL_USERS = `${API_URL}/api/users`
 
 // Validation schemas
 const CompanySchema = z.object({

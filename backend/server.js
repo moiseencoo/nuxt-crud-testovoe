@@ -11,9 +11,6 @@ server.use(cors())
 // Use default middlewares (logger, static, cors and no-cache)
 server.use(middlewares)
 
-// Use router
-server.use('/api', router)
-
 // Use the router on /api
 server.use('/api', router)
 

@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "json-server db.json --port 2311",
-    "build": "echo 'No build step required'",
-    "vercel-build": "npm install"
+    "build": "echo 'No build step required'"
   },
   "dependencies": {
     "json-server": "^1.0.0-beta.3",
